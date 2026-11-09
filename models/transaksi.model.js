@@ -1,32 +1,49 @@
-const db = require('../config/database'); // Sesuaikan dengan koneksi database kelompok kalian
+const db = require('../config/database');
 
 class TransaksiModel {
     static async getAll() {
-        const [rows] = await db.execute('SELECT * FROM transaksi ORDER BY id DESC');
+        const [rows] = await db.execute("SELECT * FROM transaksi ORDER BY id DESC");
         return rows;
     }
 
-    static async getById(id) {
-        const [rows] = await db.execute('SELECT * FROM transaksi WHERE id = ?', [id]);
-        return rows[0];
+    static async getByMetodeBayar(metode) {
+        const [rows] = await db.execute("SELECT * FROM transaksi WHERE metode_bayar = ? ORDER BY id DESC", [metode]);
+        return rows;
     }
 
     static async create(data) {
-        const { member_name, package_name, amount, payment_method, status } = data;
-        const query = 'INSERT INTO transaksi (member_name, package_name, amount, payment_method, status) VALUES (?, ?, ?, ?, ?)';
-        const [result] = await db.execute(query, [member_name, package_name, amount, payment_method, status]);
+        const query = "INSERT INTO transaksi (id_member, id_paket, tanggal_transaksi, metode_bayar, status_bayar, total_bayar) VALUES (?, ?, ?, ?, ?, ?)";
+        
+        const values = [
+            data.id_member || null,
+            data.id_paket || null,
+            data.tanggal_transaksi || null,
+            data.metode_bayar || null,
+            data.status_bayar || null,
+            data.total_bayar || null
+        ];
+
+        const [result] = await db.execute(query, values);
         return result;
     }
 
     static async update(id, data) {
-        const { member_name, package_name, amount, payment_method, status } = data;
-        const query = 'UPDATE transaksi SET member_name = ?, package_name = ?, amount = ?, payment_method = ?, status = ? WHERE id = ?';
-        const [result] = await db.execute(query, [member_name, package_name, amount, payment_method, status, id]);
+        const query = "UPDATE transaksi SET id_member = ?, id_paket = ?, tanggal_transaksi = ?, metode_bayar = ?, status_bayar = ?, total_bayar = ? WHERE id = ?";
+        const values = [
+            data.id_member || null,
+            data.id_paket || null,
+            data.tanggal_transaksi || null,
+            data.metode_bayar || null,
+            data.status_bayar || null,
+            data.total_bayar || null,
+            id
+        ];
+        const [result] = await db.execute(query, values);
         return result;
     }
 
     static async delete(id) {
-        const [result] = await db.execute('DELETE FROM transaksi WHERE id = ?', [id]);
+        const [result] = await db.execute("DELETE FROM transaksi WHERE id = ?", [id]);
         return result;
     }
 }
