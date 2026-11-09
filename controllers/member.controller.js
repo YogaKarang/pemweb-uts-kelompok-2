@@ -1,4 +1,3 @@
-
 const Member = require('../models/member.model');
 
 // Validasi data member
