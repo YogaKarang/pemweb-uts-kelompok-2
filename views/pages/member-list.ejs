@@ -1,0 +1,46 @@
+<%- include('../partials/header', { pageTitle: pageTitle }) %>
+<div class="card">
+  <div class="toolbar">
+    <h2>Data Member</h2>
+    <a class="btn" href="/member/tambah">+ Tambah Member</a>
+  </div>
+
+  <% if (gagal) { %>
+    <div class="alert alert--warn">Member tidak bisa dihapus karena masih dipakai di data Transaksi atau Booking.</div>
+  <% } %>
+
+  <% if (members.length === 0) { %>
+    <p class="center">Belum ada data member.</p>
+  <% } else { %>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>No</th><th>Nama</th><th>No. HP</th><th>Email</th>
+            <th>Jenis Kelamin</th><th>Tanggal Lahir</th><th>Status</th><th>Aksi</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% members.forEach((m, i) => { %>
+            <tr>
+              <td><%= i + 1 %></td>
+              <td><%= m.nama %></td>
+              <td><%= m.no_hp %></td>
+              <td><%= m.email || '-' %></td>
+              <td><%= m.jenis_kelamin %></td>
+              <td><%= formatTanggal(m.tanggal_lahir) %></td>
+              <td><span class="badge"><%= m.status %></span></td>
+              <td class="aksi">
+                <a href="/member/edit/<%= m.id %>">Edit</a>
+                <form method="POST" action="/member/hapus/<%= m.id %>" onsubmit="return confirm('Yakin hapus member ini?')">
+                  <button type="submit" class="link-danger">Hapus</button>
+                </form>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  <% } %>
+</div>
+<%- include('../partials/footer') %>

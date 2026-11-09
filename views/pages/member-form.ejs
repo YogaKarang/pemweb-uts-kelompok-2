@@ -1,0 +1,45 @@
+<%- include('../partials/header', { pageTitle: pageTitle }) %>
+<div class="card form-card">
+  <h2><%= pageTitle %></h2>
+
+  <% if (errors.length > 0) { %>
+    <div class="alert alert--err">
+      <ul>
+        <% errors.forEach(e => { %><li><%= e %></li><% }) %>
+      </ul>
+    </div>
+  <% } %>
+
+  <form method="POST" action="<%= action %>" novalidate>
+    <label for="nama">Nama</label>
+    <input type="text" id="nama" name="nama" value="<%= member.nama %>">
+
+    <label for="no_hp">No. HP</label>
+    <input type="text" id="no_hp" name="no_hp" value="<%= member.no_hp %>">
+
+    <label for="email">Email (boleh kosong)</label>
+    <input type="text" id="email" name="email" value="<%= member.email || '' %>">
+
+    <label for="jenis_kelamin">Jenis Kelamin</label>
+    <select id="jenis_kelamin" name="jenis_kelamin">
+      <option value="">-- Pilih --</option>
+      <option value="Laki-laki" <%= member.jenis_kelamin === 'Laki-laki' ? 'selected' : '' %>>Laki-laki</option>
+      <option value="Perempuan" <%= member.jenis_kelamin === 'Perempuan' ? 'selected' : '' %>>Perempuan</option>
+    </select>
+
+    <label for="tanggal_lahir">Tanggal Lahir</label>
+    <input type="date" id="tanggal_lahir" name="tanggal_lahir" value="<%= member.tanggal_lahir %>">
+
+    <label for="status">Status</label>
+    <select id="status" name="status">
+      <option value="Aktif" <%= member.status === 'Aktif' ? 'selected' : '' %>>Aktif</option>
+      <option value="Nonaktif" <%= member.status === 'Nonaktif' ? 'selected' : '' %>>Nonaktif</option>
+    </select>
+
+    <div class="actions">
+      <button type="submit" class="btn">Simpan</button>
+      <a class="cancel" href="/member">Batal</a>
+    </div>
+  </form>
+</div>
+<%- include('../partials/footer') %>
