@@ -1,10 +1,12 @@
 const express = require('express');
 const router = express.Router();
+const c = require('../controllers/paket.controller');
 
-// TODO (Mathew): ganti rute sementara di bawah ini dengan rute CRUD modul Paket Membership
-// (pola: lihat bagian "Cara Mengerjakan Modul" di README.md).
-router.get('/paket', (req, res) => {
-  res.render('pages/placeholder', { pageTitle: 'Paket Membership', modul: 'Paket Membership', pemegang: 'Mathew' });
-});
+router.get('/', c.index);
+router.get('/tambah', c.formTambah);
+router.post('/tambah', c.tambah);
+router.get('/edit/:id', c.formEdit);
+router.post('/edit/:id', c.edit);
+router.post('/hapus/:id', c.hapus);
 
 module.exports = router;

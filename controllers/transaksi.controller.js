@@ -1,17 +1,22 @@
 const TransaksiModel = require('../models/transaksi.model');
+const MemberModel = require('../models/member.model');
 
 exports.index = async (req, res) => {
     try {
         const transaksis = await TransaksiModel.getAll();
-        res.render('pages/transaksi/index', { transaksis, pageTitle: 'Transaksi' });
+        const members = await MemberModel.getAll();
+        const pakets = []; 
+
+        res.render('pages/transaksi', { 
+            transaksis, 
+            members, 
+            pakets, 
+            pageTitle: 'Transaksi' 
+        });
     } catch (err) {
         console.error(err);
         res.status(500).send("Terjadi kesalahan pada server");
     }
-};
-
-exports.renderCreate = (req, res) => {
-    res.render('pages/transaksi/create', { pageTitle: 'Tambah Transaksi' });
 };
 
 exports.store = async (req, res) => {
@@ -20,17 +25,7 @@ exports.store = async (req, res) => {
         res.redirect('/transaksi');
     } catch (err) {
         console.error(err);
-        res.status(500).send("Gagal menyimpan data");
-    }
-};
-
-exports.renderUpdate = async (req, res) => {
-    try {
-        const transaksi = await TransaksiModel.getById(req.params.id);
-        res.render('pages/transaksi/edit', { transaksi, pageTitle: 'Edit Transaksi' });
-    } catch (err) {
-        console.error(err);
-        res.status(500).send("Data tidak ditemukan");
+        res.status(500).send("Gagal menyimpan data transaksi");
     }
 };
 
@@ -51,5 +46,23 @@ exports.destroy = async (req, res) => {
     } catch (err) {
         console.error(err);
         res.status(500).send("Gagal menghapus data");
+    }
+};
+
+exports.getByQris = async (req, res) => {
+    try {
+        const transaksis = await TransaksiModel.getByMetodeBayar('QRIS');
+        const members = await MemberModel.getAll();
+        const pakets = [];
+
+        res.render('pages/transaksi', { 
+            transaksis, 
+            members, 
+            pakets, 
+            pageTitle: 'Transaksi QRIS' 
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Terjadi kesalahan pada server");
     }
 };

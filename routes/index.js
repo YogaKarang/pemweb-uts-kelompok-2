@@ -4,9 +4,9 @@ const homeController = require('../controllers/home.controller');
 
 router.get('/', homeController.getBeranda);
 
-router.use('/', require('./member.routes'));
-router.use('/', require('./paket.routes'));
-router.use('/', require('./transaksi.routes'));
-router.use('/', require('./booking.routes'));
+router.use('/member', require('./member.routes'));
+router.use('/paket', require('./paket.routes'));
+router.use('/transaksi', require('./transaksi.routes'));
+router.use('/booking', require('./booking.routes'));
 
 module.exports = router;
