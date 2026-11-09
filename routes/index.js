@@ -1,12 +1,8 @@
+// routes/booking.routes.js  (milik Dede)
+// Dipasang pada '/', jadi awalan /booking ditulis di setiap rute.
 const express = require('express');
+const BookingController = require('../controllers/booking.controller');
+
 const router = express.Router();
-const homeController = require('../controllers/home.controller');
-
-router.get('/', homeController.getBeranda);
-
-router.use('/member', require('./member.routes'));
-router.use('/paket', require('./paket.routes'));
-router.use('/transaksi', require('./transaksi.routes'));
-router.use('/booking', require('./booking.routes'));
 
 module.exports = router;
