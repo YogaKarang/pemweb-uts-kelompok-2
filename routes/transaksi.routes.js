@@ -1,10 +1,12 @@
 const express = require('express');
 const router = express.Router();
+const transaksiController = require('../controllers/transaksi.controller');
 
-// TODO (Dika): ganti rute sementara di bawah ini dengan rute CRUD modul Transaksi
-// (pola: lihat bagian "Cara Mengerjakan Modul" di README.md).
-router.get('/transaksi', (req, res) => {
-  res.render('pages/placeholder', { pageTitle: 'Transaksi', modul: 'Transaksi', pemegang: 'Dika' });
-});
+router.get('/transaksi', transaksiController.index);
+router.get('/transaksi/create', transaksiController.renderCreate);
+router.post('/transaksi', transaksiController.store);
+router.get('/transaksi/edit/:id', transaksiController.renderUpdate);
+router.post('/transaksi/update/:id', transaksiController.update);
+router.post('/transaksi/delete/:id', transaksiController.destroy);
 
 module.exports = router;
