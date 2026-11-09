@@ -36,6 +36,7 @@ function isValidDate(str) {
   return !Number.isNaN(d.getTime()) && d.toISOString().slice(0, 10) === str;
 }
 
+// Validasi di sisi server
 async function validateInput(body, currentMemberId = 0) {
   const data = {
     id_member: parseId(String(body.id_member || '').trim()),
@@ -72,7 +73,7 @@ async function validateInput(body, currentMemberId = 0) {
 async function renderForm(res, { status = 200, mode, booking, errors = [], currentMemberId = 0 }) {
   const members = await BookingModel.getMemberOptions(currentMemberId);
   return res.status(status).render('pages/booking/form', {
-    pageTitle: mode === 'edit' ? 'Edit Booking Latihan' : 'Tambah Booking Latihan', // Ditentukan sebagai pageTitle
+    pageTitle: mode === 'edit' ? 'Edit Booking Latihan' : 'Tambah Booking Latihan',
     mode,
     booking,
     errors,
@@ -89,7 +90,7 @@ const BookingController = {
       const rows = await BookingModel.findAll();
       const bookings = rows.map((b) => ({ ...b, tanggal_tampil: formatTanggal(b.tanggal_iso) }));
       res.render('pages/booking/index', {
-        pageTitle: 'Booking Latihan', // Ditentukan sebagai pageTitle
+        pageTitle: 'Booking Latihan',
         bookings,
         info: INFO_MESSAGES[req.query.info] || null,
       });
