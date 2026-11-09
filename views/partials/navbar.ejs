@@ -1,0 +1,23 @@
+<%
+  const menu = [
+    { label: 'Beranda', href: '/' },
+    { label: 'Member', href: '/member' },
+    { label: 'Paket', href: '/paket' },
+    { label: 'Transaksi', href: '/transaksi' },
+    { label: 'Booking', href: '/booking' }
+  ];
+  const path = typeof currentPath === 'undefined' ? '' : currentPath;
+  const aktif = (href) => (href === '/' ? path === '/' : path.startsWith(href));
+%>
+<header class="site-header">
+  <div class="container nav">
+    <a class="brand" href="/">Gym Management</a>
+    <nav>
+      <ul class="menu">
+        <% menu.forEach(m => { %>
+          <li><a href="<%= m.href %>" class="<%= aktif(m.href) ? 'active' : '' %>"><%= m.label %></a></li>
+        <% }) %>
+      </ul>
+    </nav>
+  </div>
+</header>

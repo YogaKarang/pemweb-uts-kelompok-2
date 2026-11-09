@@ -1,0 +1,16 @@
+<%- include('../partials/header', { pageTitle: pageTitle }) %>
+<div class="card">
+  <h1>Sistem Manajemen Gym</h1>
+  <p>Aplikasi web monolit (Express, EJS, MySQL) untuk mengelola member, paket membership, transaksi, dan booking latihan.</p>
+</div>
+
+<div class="grid">
+  <% modulList.forEach(m => { %>
+    <a class="card modul" href="<%= m.path %>">
+      <h3><%= m.nama %></h3>
+      <p><%= m.deskripsi %></p>
+      <small>Pemegang modul: <%= m.pemegang %></small>
+    </a>
+  <% }) %>
+</div>
+<%- include('../partials/footer') %>

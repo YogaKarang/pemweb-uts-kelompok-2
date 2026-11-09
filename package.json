@@ -1,0 +1,20 @@
+{
+  "name": "pemweb-uts-kelompok-2",
+  "version": "1.0.0",
+  "description": "UTS Pemrograman Web - Sistem Manajemen Gym (Express, EJS, MySQL)",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^18.0.10",
+    "ejs": "^7.0.2",
+    "express": "^5.3.0",
+    "mysql2": "^3.24.6"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
+}
