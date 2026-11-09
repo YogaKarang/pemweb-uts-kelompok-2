@@ -1,0 +1,94 @@
+<%- include('../partials/header') %>
+
+<!-- Font Awesome CDN untuk Ikon -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<main class="container container-home">
+  <!-- Toolbar Header Halaman -->
+  <div class="page-toolbar mb-3">
+    <div>
+      <h2 class="fw-bold text-white mb-1"><%= pageTitle %></h2>
+      <p class="text-muted small mb-0">Kelola jadwal sesi dan ketersediaan booking fasilitas gym.</p>
+    </div>
+    <div>
+      <a href="/booking/tambah" class="btn-hero-primary">
+        <i class="fa-solid fa-calendar-plus"></i> Tambah Booking
+      </a>
+    </div>
+  </div>
+
+  <!-- Table Container Dark Glassmorphism -->
+  <div class="glass-card p-3">
+    <div class="table-wrap">
+      <table class="table-custom">
+        <thead>
+          <tr>
+            <th class="text-center" style="width: 50px;">No</th>
+            <th>Member</th>
+            <th>Jenis Latihan</th>
+            <th>Tanggal</th>
+            <th>Jam Mulai</th>
+            <th>Catatan</th>
+            <th class="text-center">Status</th>
+            <th class="text-center" style="width: 140px;">Aksi</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (typeof bookings !== 'undefined' && bookings && bookings.length > 0) { %>
+            <% bookings.forEach(function(b, index) { %>
+              <tr>
+                <td class="text-center font-weight-bold" style="color: #94a3b8;"><%= index + 1 %></td>
+                <td>
+                  <span class="fw-semibold text-white">
+                    <% 
+                      let mNama = (b.nama_member || b.nama || b.member_nama);
+                      if (!mNama && typeof members !== 'undefined' && members) {
+                        let matched = members.find(m => m && m.id == b.id_member);
+                        if (matched) mNama = (matched.nama || matched.nama_member);
+                      }
+                    %>
+                    <%= mNama || ('Member #' + b.id_member) %>
+                  </span>
+                </td>
+                <td><i class="fa-solid fa-dumbbell text-muted me-1 small"></i> <%= b.jenis_latihan %></td>
+                <td style="color: #cbd5e1;"><%= b.tanggal_booking ? new Date(b.tanggal_booking).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) : '-' %></td>
+                <td class="fw-medium text-info"><%= b.jam_mulai || '-' %></td>
+                <td style="max-width: 220px; color: #cbd5e1;"><%= b.catatan || '-' %></td>
+                <td class="text-center">
+                  <% if (b.status === 'Selesai') { %>
+                    <span class="badge-status badge-status--active">Selesai</span>
+                  <% } else if (b.status === 'Dibatalkan') { %>
+                    <span class="badge-status badge-status--inactive">Dibatalkan</span>
+                  <% } else { %>
+                    <span class="badge bg-info bg-opacity-10 text-info border border-info border-opacity-25 px-3 py-1 rounded-pill">Dipesan</span>
+                  <% } %>
+                </td>
+                <td class="text-center">
+                  <div class="d-flex justify-content-center gap-2">
+                    <a href="/booking/edit/<%= b.id %>" class="btn-action btn-action--edit" title="Edit Data">
+                      <i class="fa-solid fa-pen-to-square"></i> Edit
+                    </a>
+                    <form action="/booking/hapus/<%= b.id %>" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus booking ini?');">
+                      <button type="submit" class="btn-action btn-action--delete" title="Hapus Data">
+                        <i class="fa-solid fa-trash"></i> Hapus
+                      </button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+            <% }); %>
+          <% } else { %>
+            <tr>
+              <td colspan="8" class="text-center py-4 text-muted">
+                <i class="fa-solid fa-calendar-xmark fs-3 d-block mb-2"></i>
+                Belum ada data booking latihan terdaftar.
+              </td>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</main>
+
+<%- include('../partials/footer') %>

@@ -1,53 +1,91 @@
-<%- include('../partials/header', { pageTitle: pageTitle }) %>
+<%- include('../partials/header') %>
 
-<div class="card">
-  <div class="toolbar">
-    <h2>Paket Membership</h2>
-    <a class="btn" href="/paket/tambah">+ Tambah Paket</a>
+<!-- Font Awesome CDN untuk Ikon -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<main class="container container-home">
+  <!-- Toolbar Header Halaman -->
+  <div class="page-toolbar mb-3">
+    <div>
+      <h2 class="fw-bold text-white mb-1">Paket Membership</h2>
+      <p class="text-muted small mb-0">Kelola pilihan durasi, harga, dan fasilitas paket keanggotaan gym.</p>
+    </div>
+    <div>
+      <a href="/paket/tambah" class="btn-hero-primary">
+        <i class="fa-solid fa-plus"></i> Tambah Paket
+      </a>
+    </div>
   </div>
 
-  <% if (pesanError) { %>
-    <div class="alert alert--warn"><%= pesanError %></div>
+  <!-- Alert Notifikasi Jika Gagal Hapus -->
+  <% if (typeof pesanError !== 'undefined' && pesanError) { %>
+    <div class="alert alert--err mb-4">
+      <i class="fa-solid fa-circle-exclamation me-2"></i>
+      <%= pesanError %>
+    </div>
   <% } %>
 
-  <% if (pakets.length === 0) { %>
-    <p>Belum ada paket membership. Klik "Tambah Paket" untuk membuat yang pertama.</p>
-  <% } else { %>
+  <!-- Table Container Dark Glassmorphism -->
+  <div class="glass-card p-3">
     <div class="table-wrap">
-      <table>
+      <table class="table-custom">
         <thead>
           <tr>
-            <th>No</th>
+            <th class="text-center" style="width: 50px;">No</th>
             <th>Nama Paket</th>
             <th>Durasi</th>
-            <th class="num">Harga</th>
+            <th>Harga</th>
             <th>Deskripsi</th>
-            <th>Status</th>
-            <th>Aksi</th>
+            <th class="text-center">Status</th>
+            <th class="text-center" style="width: 140px;">Aksi</th>
           </tr>
         </thead>
         <tbody>
-          <% pakets.forEach((p, i) => { %>
+          <% if (pakets && pakets.length > 0) { %>
+            <% pakets.forEach((p, index) => { %>
+              <tr>
+                <td class="text-center font-weight-bold" style="color: #94a3b8;"><%= index + 1 %></td>
+                <td>
+                  <span class="fw-semibold text-white"><%= p.nama_paket %></span>
+                </td>
+                <td><i class="fa-solid fa-clock text-muted me-1 small"></i> <%= p.durasi_hari %> hari</td>
+                <td class="fw-semibold text-info">
+                  Rp <%= Number(p.harga).toLocaleString('id-ID') %>
+                </td>
+                <td style="max-width: 280px; color: #cbd5e1;"><%= p.deskripsi || '-' %></td>
+                <td class="text-center">
+                  <% if (p.status === 'Aktif') { %>
+                    <span class="badge-status badge-status--active">Aktif</span>
+                  <% } else { %>
+                    <span class="badge-status badge-status--inactive">Nonaktif</span>
+                  <% } %>
+                </td>
+                <td class="text-center">
+                  <div class="d-flex justify-content-center gap-2">
+                    <a href="/paket/edit/<%= p.id %>" class="btn-action btn-action--edit" title="Edit Data">
+                      <i class="fa-solid fa-pen-to-square"></i> Edit
+                    </a>
+                    <form action="/paket/hapus/<%= p.id %>" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus paket ini?');">
+                      <button type="submit" class="btn-action btn-action--delete" title="Hapus Data">
+                        <i class="fa-solid fa-trash"></i> Hapus
+                      </button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+            <% }) %>
+          <% } else { %>
             <tr>
-              <td><%= i + 1 %></td>
-              <td><%= p.nama_paket %></td>
-              <td><%= p.durasi_hari %> hari</td>
-              <td class="num"><%= formatRupiah(p.harga) %></td>
-              <td><%= p.deskripsi || '-' %></td>
-              <td><span class="badge"><%= p.status %></span></td>
-              <td class="aksi">
-                <a href="/paket/edit/<%= p.id %>">Edit</a>
-                <form action="/paket/hapus/<%= p.id %>" method="POST"
-                      onsubmit="return confirm('Yakin ingin menghapus paket ini?')">
-                  <button type="submit" class="link-danger">Hapus</button>
-                </form>
+              <td colspan="7" class="text-center py-4 text-muted">
+                <i class="fa-solid fa-box-open fs-3 d-block mb-2"></i>
+                Belum ada data paket keanggotaan terdaftar.
               </td>
             </tr>
-          <% }) %>
+          <% } %>
         </tbody>
       </table>
     </div>
-  <% } %>
-</div>
+  </div>
+</main>
 
 <%- include('../partials/footer') %>

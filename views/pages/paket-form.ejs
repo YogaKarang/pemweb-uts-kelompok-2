@@ -1,49 +1,80 @@
-<%- include('../partials/header', { pageTitle: pageTitle }) %>
+<%- include('../partials/header') %>
 
-<div class="card form-card">
-  <h2><%= mode === 'edit' ? 'Edit Paket Membership' : 'Tambah Paket Membership' %></h2>
+<!-- Font Awesome CDN untuk Ikon -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-  <% if (errors.length) { %>
-    <div class="alert alert--err">
-      <ul>
-        <% errors.forEach(e => { %><li><%= e %></li><% }) %>
-      </ul>
+<main class="container container-home">
+  <!-- Toolbar Header Halaman -->
+  <div class="page-toolbar">
+    <div>
+      <h2 class="fw-bold text-white mb-1"><%= pageTitle %></h2>
+      <p class="text-muted small mb-0">Isi formulir di bawah ini untuk mengelola rincian paket latihan.</p>
     </div>
-  <% } %>
+    <div>
+      <a href="/paket" class="btn-hero-secondary">
+        <i class="fa-solid fa-arrow-left"></i> Kembali ke Daftar
+      </a>
+    </div>
+  </div>
 
-  <form action="<%= mode === 'edit' ? '/paket/edit/' + paket.id : '/paket/tambah' %>" method="POST">
-
-    <label for="nama_paket">Nama Paket</label>
-    <input type="text" id="nama_paket" name="nama_paket" maxlength="100" required
-           value="<%= paket.nama_paket %>">
-
-    <div class="row">
-      <div>
-        <label for="durasi_hari">Durasi (hari)</label>
-        <input type="number" id="durasi_hari" name="durasi_hari" min="1" step="1" required
-               value="<%= paket.durasi_hari %>">
+  <!-- Container Form Glassmorphism -->
+  <div class="glass-card form-glass-container">
+    <% if (errors && errors.length > 0) { %>
+      <div class="alert alert--err mb-4">
+        <strong class="d-block mb-1"><i class="fa-solid fa-triangle-exclamation me-1"></i> Terjadi kesalahan input:</strong>
+        <ul class="mb-0 ps-3">
+          <% errors.forEach(err => { %>
+            <li><%= err %></li>
+          <% }) %>
+        </ul>
       </div>
-      <div>
-        <label for="harga">Harga (Rp)</label>
-        <input type="number" id="harga" name="harga" min="0" step="any" required
-               value="<%= paket.harga %>">
+    <% } %>
+
+    <form action="<%= action %>" method="POST">
+      <div class="form-grid">
+        <!-- Nama Paket -->
+        <div class="form-group">
+          <label for="nama_paket">Nama Paket <span class="text-danger">*</span></label>
+          <input type="text" id="nama_paket" name="nama_paket" class="form-input" placeholder="Contoh: Bulanan / Tahunan" value="<%= paket.nama_paket %>" required>
+        </div>
+
+        <!-- Durasi (Hari) -->
+        <div class="form-group">
+          <label for="durasi_hari">Durasi (dalam hari) <span class="text-danger">*</span></label>
+          <input type="number" id="durasi_hari" name="durasi_hari" class="form-input" placeholder="Contoh: 30" value="<%= paket.durasi_hari %>" required min="1">
+        </div>
+
+        <!-- Harga (Rp) -->
+        <div class="form-group">
+          <label for="harga">Harga (Rp) <span class="text-danger">*</span></label>
+          <input type="number" id="harga" name="harga" class="form-input" placeholder="Contoh: 250000" value="<%= paket.harga %>" required min="0">
+        </div>
+
+        <!-- Status -->
+        <div class="form-group">
+          <label for="status">Status Paket <span class="text-danger">*</span></label>
+          <select id="status" name="status" class="form-input" required>
+            <option value="Aktif" <%= paket.status === 'Aktif' ? 'selected' : '' %>>Aktif</option>
+            <option value="Nonaktif" <%= paket.status === 'Nonaktif' ? 'selected' : '' %>>Nonaktif</option>
+          </select>
+        </div>
+
+        <!-- Deskripsi (Full Row) -->
+        <div class="form-group style-full-col" style="grid-column: span 2;">
+          <label for="deskripsi">Deskripsi Fasilitas <small class="text-muted">(Opsional)</small></label>
+          <textarea id="deskripsi" name="deskripsi" class="form-input" rows="3" placeholder="Tuliskan keuntungan dan fasilitas paket ini..."><%= paket.deskripsi %></textarea>
+        </div>
       </div>
-    </div>
 
-    <label for="deskripsi">Deskripsi</label>
-    <textarea id="deskripsi" name="deskripsi" rows="3"><%= paket.deskripsi || '' %></textarea>
-
-    <label for="status">Status</label>
-    <select id="status" name="status">
-      <option value="Aktif"    <%= paket.status === 'Aktif' ? 'selected' : '' %>>Aktif</option>
-      <option value="Nonaktif" <%= paket.status === 'Nonaktif' ? 'selected' : '' %>>Nonaktif</option>
-    </select>
-
-    <div class="actions">
-      <button type="submit" class="btn">Simpan</button>
-      <a class="cancel" href="/paket">Batal</a>
-    </div>
-  </form>
-</div>
+      <!-- Tombol Aksi Simpan & Batal -->
+      <div class="form-actions mt-4">
+        <button type="submit" class="btn-hero-primary">
+          <i class="fa-solid fa-floppy-disk me-1"></i> Simpan Data
+        </button>
+        <a href="/paket" class="btn-hero-secondary">Batal</a>
+      </div>
+    </form>
+  </div>
+</main>
 
 <%- include('../partials/footer') %>

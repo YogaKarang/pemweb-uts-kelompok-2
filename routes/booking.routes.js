@@ -1,13 +1,12 @@
 const express = require('express');
-const BookingController = require('../controllers/booking.controller');
-
 const router = express.Router();
+const bookingController = require('../controllers/booking.controller');
 
-router.get('/', BookingController.index);
-router.get('/create', BookingController.createForm);
-router.post('/', BookingController.store);
-router.get('/:id/edit', BookingController.editForm);
-router.post('/:id/update', BookingController.update);
-router.post('/:id/delete', BookingController.destroy);
+router.get('/', bookingController.index);
+router.get('/tambah', bookingController.formTambah);
+router.post('/tambah', bookingController.simpan);
+router.get('/edit/:id', bookingController.formEdit);
+router.post('/edit/:id', bookingController.perbarui);
+router.post('/hapus/:id', bookingController.hapus);
 
 module.exports = router;

@@ -39,7 +39,7 @@ exports.index = async (req, res, next) => {
     const pakets = await Paket.getAll();
     res.render('pages/paket-list', {
       pageTitle: 'Paket Membership',
-      pakets,
+      pakets: pakets || [],
       pesanError: null,
     });
   } catch (err) {
@@ -52,6 +52,7 @@ exports.formTambah = (req, res) => {
   res.render('pages/paket-form', {
     pageTitle: 'Tambah Paket',
     mode: 'tambah',
+    action: '/paket/tambah',
     paket: { nama_paket: '', durasi_hari: '', harga: '', deskripsi: '', status: 'Aktif' },
     errors: [],
   });
@@ -65,6 +66,7 @@ exports.tambah = async (req, res, next) => {
       return res.status(400).render('pages/paket-form', {
         pageTitle: 'Tambah Paket',
         mode: 'tambah',
+        action: '/paket/tambah',
         paket: { ...req.body },
         errors,
       });
@@ -84,6 +86,7 @@ exports.formEdit = async (req, res, next) => {
     res.render('pages/paket-form', {
       pageTitle: 'Edit Paket',
       mode: 'edit',
+      action: `/paket/edit/${paket.id}`,
       paket,
       errors: [],
     });
@@ -104,6 +107,7 @@ exports.edit = async (req, res, next) => {
       return res.status(400).render('pages/paket-form', {
         pageTitle: 'Edit Paket',
         mode: 'edit',
+        action: `/paket/edit/${id}`,
         paket: { ...req.body, id },
         errors,
       });
@@ -118,7 +122,10 @@ exports.edit = async (req, res, next) => {
 // DELETE
 exports.hapus = async (req, res, next) => {
   try {
-    const affected = await Paket.delete(req.params.id);
+    // Menyesuaikan jika method di model kamu bernama delete atau remove
+    const fnDelete = Paket.delete || Paket.remove;
+    const affected = await fnDelete.call(Paket, req.params.id);
+    
     if (!affected) return next(); // data tidak ditemukan -> 404
     res.redirect('/paket');
   } catch (err) {
@@ -128,7 +135,7 @@ exports.hapus = async (req, res, next) => {
         const pakets = await Paket.getAll();
         return res.status(409).render('pages/paket-list', {
           pageTitle: 'Paket Membership',
-          pakets,
+          pakets: pakets || [],
           pesanError:
             'Paket tidak dapat dihapus karena masih dipakai pada data transaksi. ' +
             'Ubah statusnya menjadi Nonaktif jika paket tidak dijual lagi.',

@@ -1,45 +1,90 @@
-<%- include('../partials/header', { pageTitle: pageTitle }) %>
-<div class="card form-card">
-  <h2><%= pageTitle %></h2>
+<%- include('../partials/header') %>
 
-  <% if (errors.length > 0) { %>
-    <div class="alert alert--err">
-      <ul>
-        <% errors.forEach(e => { %><li><%= e %></li><% }) %>
-      </ul>
+<!-- Font Awesome CDN untuk Ikon -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<main class="container container-home">
+  <!-- Toolbar Header Halaman -->
+  <div class="page-toolbar">
+    <div>
+      <h2 class="fw-bold text-white mb-1"><%= pageTitle %></h2>
+      <p class="text-muted small mb-0">Isi formulir di bawah ini untuk menyimpan data member keanggotaan.</p>
     </div>
-  <% } %>
-
-  <form method="POST" action="<%= action %>" novalidate>
-    <label for="nama">Nama</label>
-    <input type="text" id="nama" name="nama" value="<%= member.nama %>">
-
-    <label for="no_hp">No. HP</label>
-    <input type="text" id="no_hp" name="no_hp" value="<%= member.no_hp %>">
-
-    <label for="email">Email (boleh kosong)</label>
-    <input type="text" id="email" name="email" value="<%= member.email || '' %>">
-
-    <label for="jenis_kelamin">Jenis Kelamin</label>
-    <select id="jenis_kelamin" name="jenis_kelamin">
-      <option value="">-- Pilih --</option>
-      <option value="Laki-laki" <%= member.jenis_kelamin === 'Laki-laki' ? 'selected' : '' %>>Laki-laki</option>
-      <option value="Perempuan" <%= member.jenis_kelamin === 'Perempuan' ? 'selected' : '' %>>Perempuan</option>
-    </select>
-
-    <label for="tanggal_lahir">Tanggal Lahir</label>
-    <input type="date" id="tanggal_lahir" name="tanggal_lahir" value="<%= member.tanggal_lahir %>">
-
-    <label for="status">Status</label>
-    <select id="status" name="status">
-      <option value="Aktif" <%= member.status === 'Aktif' ? 'selected' : '' %>>Aktif</option>
-      <option value="Nonaktif" <%= member.status === 'Nonaktif' ? 'selected' : '' %>>Nonaktif</option>
-    </select>
-
-    <div class="actions">
-      <button type="submit" class="btn">Simpan</button>
-      <a class="cancel" href="/member">Batal</a>
+    <div>
+      <a href="/member" class="btn-hero-secondary">
+        <i class="fa-solid fa-arrow-left"></i> Kembali ke Daftar
+      </a>
     </div>
-  </form>
-</div>
+  </div>
+
+  <!-- Container Form Glassmorphism -->
+  <div class="glass-card form-glass-container">
+    <% if (errors && errors.length > 0) { %>
+      <div class="alert alert--err mb-4">
+        <strong class="d-block mb-1"><i class="fa-solid fa-triangle-exclamation me-1"></i> Terjadi kesalahan input:</strong>
+        <ul class="mb-0 ps-3">
+          <% errors.forEach(err => { %>
+            <li><%= err %></li>
+          <% }) %>
+        </ul>
+      </div>
+    <% } %>
+
+    <form action="<%= action %>" method="POST">
+      <div class="form-grid">
+        <!-- Nama Lengkap -->
+        <div class="form-group">
+          <label for="nama">Nama Member <span class="text-danger">*</span></label>
+          <input type="text" id="nama" name="nama" class="form-input" placeholder="Masukkan nama lengkap" value="<%= member.nama %>" required>
+        </div>
+
+        <!-- No HP -->
+        <div class="form-group">
+          <label for="no_hp">No. HP / Whatsapp <span class="text-danger">*</span></label>
+          <input type="text" id="no_hp" name="no_hp" class="form-input" placeholder="Contoh: 081234567890" value="<%= member.no_hp %>" required>
+        </div>
+
+        <!-- Email -->
+        <div class="form-group">
+          <label for="email">Alamat Email <small class="text-muted">(Opsional)</small></label>
+          <input type="email" id="email" name="email" class="form-input" placeholder="contoh@domain.com" value="<%= member.email %>">
+        </div>
+
+        <!-- Jenis Kelamin -->
+        <div class="form-group">
+          <label for="jenis_kelamin">Jenis Kelamin <span class="text-danger">*</span></label>
+          <select id="jenis_kelamin" name="jenis_kelamin" class="form-input" required>
+            <option value="" disabled <%= !member.jenis_kelamin ? 'selected' : '' %>>-- Pilih Jenis Kelamin --</option>
+            <option value="Laki-laki" <%= member.jenis_kelamin === 'Laki-laki' ? 'selected' : '' %>>Laki-laki</option>
+            <option value="Perempuan" <%= member.jenis_kelamin === 'Perempuan' ? 'selected' : '' %>>Perempuan</option>
+          </select>
+        </div>
+
+        <!-- Tanggal Lahir -->
+        <div class="form-group">
+          <label for="tanggal_lahir">Tanggal Lahir <span class="text-danger">*</span></label>
+          <input type="date" id="tanggal_lahir" name="tanggal_lahir" class="form-input" value="<%= member.tanggal_lahir ? new Date(member.tanggal_lahir).toISOString().split('T')[0] : '' %>" required>
+        </div>
+
+        <!-- Status -->
+        <div class="form-group">
+          <label for="status">Status Keanggotaan <span class="text-danger">*</span></label>
+          <select id="status" name="status" class="form-input" required>
+            <option value="Aktif" <%= member.status === 'Aktif' ? 'selected' : '' %>>Aktif</option>
+            <option value="Nonaktif" <%= member.status === 'Nonaktif' ? 'selected' : '' %>>Nonaktif</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Tombol Aksi Simpan & Batal -->
+      <div class="form-actions mt-4">
+        <button type="submit" class="btn-hero-primary">
+          <i class="fa-solid fa-floppy-disk me-1"></i> Simpan Data
+        </button>
+        <a href="/member" class="btn-hero-secondary">Batal</a>
+      </div>
+    </form>
+  </div>
+</main>
+
 <%- include('../partials/footer') %>

@@ -1,0 +1,96 @@
+<%- include('../partials/header') %>
+
+<!-- Font Awesome CDN untuk Ikon -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<main class="container container-home">
+  <!-- Toolbar Header Halaman -->
+  <div class="page-toolbar">
+    <div>
+      <h2 class="fw-bold text-white mb-1"><%= pageTitle %></h2>
+      <p class="text-muted small mb-0">Isi formulir di bawah ini untuk mengatur jadwal reservasi sesi latihan.</p>
+    </div>
+    <div>
+      <a href="/booking" class="btn-hero-secondary">
+        <i class="fa-solid fa-arrow-left"></i> Kembali ke Daftar
+      </a>
+    </div>
+  </div>
+
+  <!-- Container Form Glassmorphism -->
+  <div class="glass-card form-glass-container">
+    <% if (typeof errors !== 'undefined' && errors && errors.length > 0) { %>
+      <div class="alert alert--err mb-4">
+        <strong class="d-block mb-1"><i class="fa-solid fa-triangle-exclamation me-1"></i> Terjadi kesalahan input:</strong>
+        <ul class="mb-0 ps-3">
+          <% errors.forEach(err => { %>
+            <li><%= err %></li>
+          <% }) %>
+        </ul>
+      </div>
+    <% } %>
+
+    <form action="<%= action %>" method="POST">
+      <div class="form-grid">
+        <!-- Pilih Member -->
+        <div class="form-group">
+          <label for="id_member">Pilih Member <span class="text-danger">*</span></label>
+          <select id="id_member" name="id_member" class="form-input" required>
+            <option value="" disabled <%= !booking.id_member ? 'selected' : '' %>>-- Pilih Member --</option>
+            <% if (typeof members !== 'undefined' && members) { %>
+              <% members.forEach(function(m) { %>
+                <option value="<%= m.id %>" <%= booking.id_member == m.id ? 'selected' : '' %>>
+                  <%= m.nama || m.nama_member || ('Member #' + m.id) %>
+                </option>
+              <% }); %>
+            <% } %>
+          </select>
+        </div>
+
+        <!-- Jenis Latihan -->
+        <div class="form-group">
+          <label for="jenis_latihan">Jenis Latihan <span class="text-danger">*</span></label>
+          <input type="text" id="jenis_latihan" name="jenis_latihan" class="form-input" placeholder="Contoh: Personal Trainer / Yoga / Gym Bebas" value="<%= booking.jenis_latihan %>" required>
+        </div>
+
+        <!-- Tanggal Booking -->
+        <div class="form-group">
+          <label for="tanggal_booking">Tanggal Latihan <span class="text-danger">*</span></label>
+          <input type="date" id="tanggal_booking" name="tanggal_booking" class="form-input" value="<%= booking.tanggal_booking ? new Date(booking.tanggal_booking).toISOString().split('T')[0] : '' %>" required>
+        </div>
+
+        <!-- Jam Mulai -->
+        <div class="form-group">
+          <label for="jam_mulai">Jam Mulai <span class="text-danger">*</span></label>
+          <input type="time" id="jam_mulai" name="jam_mulai" class="form-input" value="<%= booking.jam_mulai %>" required>
+        </div>
+
+        <!-- Status -->
+        <div class="form-group" style="grid-column: span 2;">
+          <label for="status">Status Booking <span class="text-danger">*</span></label>
+          <select id="status" name="status" class="form-input" required>
+            <option value="Dipesan" <%= booking.status === 'Dipesan' ? 'selected' : '' %>>Dipesan</option>
+            <option value="Selesai" <%= booking.status === 'Selesai' ? 'selected' : '' %>>Selesai</option>
+            <option value="Dibatalkan" <%= booking.status === 'Dibatalkan' ? 'selected' : '' %>>Dibatalkan</option>
+          </select>
+        </div>
+
+        <!-- Catatan -->
+        <div class="form-group" style="grid-column: span 2;">
+          <label for="catatan">Catatan Tambahan <small class="text-muted">(Opsional)</small></label>
+          <textarea id="catatan" name="catatan" class="form-input" rows="3" placeholder="Contoh: Membawa matras sendiri / Fokus latihan beban atas..."><%= booking.catatan %></textarea>
+        </div>
+      </div>
+
+      <!-- Tombol Aksi Simpan & Batal -->
+      <div class="form-actions mt-4">
+        <button type="submit" class="btn-hero-primary">
+          <i class="fa-solid fa-floppy-disk me-1"></i> Simpan Data
+        </button>
+        <a href="/booking" class="btn-hero-secondary">Batal</a>
+      </div>
+    </form>
+  </div>
+</main>
+
+<%- include('../partials/footer') %>

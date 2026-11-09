@@ -2,68 +2,121 @@ const TransaksiModel = require('../models/transaksi.model');
 const MemberModel = require('../models/member.model');
 const PaketModel = require('../models/paket.model');
 
-exports.index = async (req, res) => {
-    try {
-        const transaksis = await TransaksiModel.getAll();
-        const members = await MemberModel.getAll();
-        const pakets = await PaketModel.getAll();
+// READ: Menampilkan daftar transaksi
+exports.index = async (req, res, next) => {
+  try {
+    const transaksis = await TransaksiModel.getAll();
+    const members = await MemberModel.getAll();
+    const pakets = await PaketModel.getAll();
 
-        res.render('pages/transaksi', { 
-            transaksis, 
-            members, 
-            pakets, 
-            pageTitle: 'Transaksi' 
-        });
-    } catch (err) {
-        console.error(err);
-        res.status(500).send("Terjadi kesalahan pada server");
-    }
+    res.render('pages/transaksi-list', {
+      pageTitle: 'Daftar Transaksi Gym',
+      transaksis: transaksis || [],
+      members: members || [],
+      pakets: pakets || []
+    });
+  } catch (err) {
+    next(err);
+  }
 };
 
-exports.store = async (req, res) => {
-    try {
-        await TransaksiModel.create(req.body);
-        res.redirect('/transaksi');
-    } catch (err) {
-        console.error(err);
-        res.status(500).send("Gagal menyimpan data transaksi");
-    }
+// READ: Filter transaksi QRIS
+exports.getByQris = async (req, res, next) => {
+  try {
+    const fnFilter = TransaksiModel.getByMetodeBayar || TransaksiModel.getByMetode || TransaksiModel.getAll;
+    const transaksis = await fnFilter.call(TransaksiModel, 'QRIS');
+
+    const members = await MemberModel.getAll();
+    const pakets = await PaketModel.getAll();
+
+    res.render('pages/transaksi-list', {
+      pageTitle: 'Transaksi QRIS',
+      transaksis: transaksis || [],
+      members: members || [],
+      pakets: pakets || []
+    });
+  } catch (err) {
+    next(err);
+  }
 };
 
-exports.update = async (req, res) => {
-    try {
-        await TransaksiModel.update(req.params.id, req.body);
-        res.redirect('/transaksi');
-    } catch (err) {
-        console.error(err);
-        res.status(500).send("Gagal memperbarui data");
-    }
+// CREATE: Menampilkan form tambah transaksi
+exports.formTambah = async (req, res, next) => {
+  try {
+    const members = await MemberModel.getAll();
+    const pakets = await PaketModel.getAll();
+
+    const transaksi = {
+      id_member: '',
+      id_paket: '',
+      tanggal_transaksi: new Date().toISOString().split('T')[0],
+      metode_bayar: 'Tunai',
+      status_bayar: 'Lunas',
+      total_bayar: ''
+    };
+
+    res.render('pages/transaksi-form', {
+      pageTitle: 'Tambah Transaksi',
+      action: '/transaksi/store',
+      transaksi,
+      members: members || [],
+      pakets: pakets || [],
+      errors: []
+    });
+  } catch (err) {
+    next(err);
+  }
 };
 
-exports.destroy = async (req, res) => {
-    try {
-        await TransaksiModel.delete(req.params.id);
-        res.redirect('/transaksi');
-    } catch (err) {
-        console.error(err);
-        res.status(500).send("Gagal menghapus data");
-    }
+// CREATE: Menyimpan data transaksi baru
+exports.store = async (req, res, next) => {
+  try {
+    await TransaksiModel.create(req.body);
+    res.redirect('/transaksi');
+  } catch (err) {
+    next(err);
+  }
 };
 
-exports.getByQris = async (req, res) => {
-    try {
-        const transaksis = await TransaksiModel.getByMetodeBayar('QRIS');
-        const members = await MemberModel.getAll();
-        const pakets = await PaketModel.getAll();
+// UPDATE: Menampilkan form edit transaksi
+exports.formEdit = async (req, res, next) => {
+  try {
+    const transaksi = await TransaksiModel.getById(req.params.id);
+    if (!transaksi) return next();
 
-        res.render('pages/transaksi', { 
-            transaksis, 
-            members, 
-            pakets, 
-            pageTitle: 'Transaksi QRIS' 
-        });
-    } catch (err) {
-        console.error(err);
-        res.status(500).send("Terjadi kesalahan pada server");
-    }
+    const members = await MemberModel.getAll();
+    const pakets = await PaketModel.getAll();
+
+    res.render('pages/transaksi-form', {
+      pageTitle: `Edit Transaksi #${transaksi.id}`,
+      action: `/transaksi/update/${transaksi.id}`,
+      transaksi,
+      members: members || [],
+      pakets: pakets || [],
+      errors: []
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// UPDATE: Menyimpan perubahan transaksi
+exports.update = async (req, res, next) => {
+  try {
+    await TransaksiModel.update(req.params.id, req.body);
+    res.redirect('/transaksi');
+  } catch (err) {
+    next(err);
+  }
+};
+
+// DELETE: Menghapus data transaksi
+exports.destroy = async (req, res, next) => {
+  try {
+    const fnDelete = TransaksiModel.delete || TransaksiModel.remove || TransaksiModel.destroy;
+    await fnDelete.call(TransaksiModel, req.params.id);
+    res.redirect('/transaksi');
+  } catch (err) {
+    next(err);
+  }
 };

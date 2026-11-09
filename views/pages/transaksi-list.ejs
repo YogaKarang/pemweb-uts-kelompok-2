@@ -1,0 +1,171 @@
+<%- include('../partials/header') %>
+
+<!-- Font Awesome CDN untuk Ikon -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<main class="container container-home">
+  <!-- Toolbar Header Halaman (Margin bawah diperkecil agar tidak terlalu jauh) -->
+  <div class="page-toolbar mb-3">
+    <div>
+      <h2 class="fw-bold text-white mb-1"><%= pageTitle %></h2>
+      <p class="text-muted small mb-0">Kelola data transaksi pembayaran member dengan mudah.</p>
+    </div>
+    <div>
+      <a href="/transaksi/tambah" class="btn-hero-primary">
+        <i class="fa-solid fa-plus"></i> Tambah Transaksi
+      </a>
+    </div>
+  </div>
+
+  <!-- Filter & Search Bar (Diberi margin-bottom 1.25rem agar memberi jarak pas ke tabel) -->
+  <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2" style="margin-bottom: 1.25rem !important;">
+    <div style="width: 300px;" class="position-relative">
+      <div class="input-group">
+        <span class="input-group-text bg-dark border-secondary text-muted"><i class="fa-solid fa-search"></i></span>
+        <input type="text" id="searchInput" class="form-input py-1" placeholder="Cari nama member..." style="border-top-left-radius: 0 !important; border-bottom-left-radius: 0 !important;">
+      </div>
+      <span id="clearSearch" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #94a3b8; display: none; z-index: 10;" title="Hapus pencarian">
+        <i class="fa-solid fa-xmark"></i>
+      </span>
+    </div>
+
+    <div class="d-flex align-items-center gap-2">
+      <span class="text-muted small me-2" id="dataCounter">Menampilkan 0 data</span>
+      <div class="d-flex gap-2">
+        <a href="/transaksi" class="btn-hero-secondary py-1 px-3" style="font-size: 0.85rem;">Semua Transaksi</a>
+        <a href="/transaksi/qris" class="btn-hero-secondary py-1 px-3 border-info text-info" style="font-size: 0.85rem;">Filter QRIS</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Table Container Dark Glassmorphism -->
+  <div class="glass-card p-3">
+    <div class="table-wrap">
+      <table class="table-custom" id="transaksiTable">
+        <thead>
+          <tr>
+            <th class="text-center" style="width: 50px;">No</th>
+            <th>Nama Member</th>
+            <th>Jenis Paket</th>
+            <th>Tanggal</th>
+            <th>Metode Bayar</th>
+            <th>Total (Rp)</th>
+            <th class="text-center">Status</th>
+            <th class="text-center" style="width: 140px;">Aksi</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (typeof transaksis !== 'undefined' && transaksis && transaksis.length > 0) { %>
+            <% transaksis.forEach(function(trx, index) { %>
+              <tr>
+                <td class="text-center font-weight-bold" style="color: #94a3b8;"><%= index + 1 %></td>
+                <td class="nama-member">
+                  <span class="fw-semibold text-white">
+                    <% 
+                      let mNama = (trx.nama_member || trx.nama || trx.member_nama);
+                      if (!mNama && typeof members !== 'undefined' && members) {
+                        let matched = members.find(m => m && m.id == trx.id_member);
+                        if (matched) mNama = (matched.nama || matched.nama_member);
+                      }
+                    %>
+                    <%= mNama || ('Member #' + trx.id_member) %>
+                  </span>
+                </td>
+                <td>
+                  <span class="badge bg-info bg-opacity-10 text-info border border-info border-opacity-25 px-2 py-1 rounded">
+                    <% 
+                      let pNama = (trx.nama_paket || trx.paket_nama);
+                      if (!pNama && typeof pakets !== 'undefined' && pakets) {
+                        let matchedP = pakets.find(p => p && p.id == trx.id_paket);
+                        if (matchedP) pNama = matchedP.nama_paket;
+                      }
+                    %>
+                    <%= pNama || ('Paket #' + trx.id_paket) %>
+                  </span>
+                </td>
+                <td style="color: #cbd5e1;"><%= trx.tanggal_transaksi ? new Date(trx.tanggal_transaksi).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) : '-' %></td>
+                <td class="fw-medium text-white"><%= trx.metode_bayar || '-' %></td>
+                <td class="fw-semibold text-info">Rp <%= Number(trx.total_bayar || 0).toLocaleString('id-ID') %></td>
+                <td class="text-center">
+                  <% if (trx.status_bayar && trx.status_bayar.toLowerCase() === 'lunas') { %>
+                    <span class="badge-status badge-status--active">Lunas</span>
+                  <% } else { %>
+                    <span class="badge-status badge-status--inactive">Belum Lunas</span>
+                  <% } %>
+                </td>
+                <td class="text-center">
+                  <div class="d-flex justify-content-center gap-2">
+                    <a href="/transaksi/edit/<%= trx.id %>" class="btn-action btn-action--edit" title="Edit Transaksi">
+                      <i class="fa-solid fa-pen-to-square"></i> Edit
+                    </a>
+                    <form action="/transaksi/destroy/<%= trx.id %>" method="POST" onsubmit="return confirm('Yakin ingin menghapus data transaksi ini?')">
+                      <button type="submit" class="btn-action btn-action--delete" title="Hapus Transaksi">
+                        <i class="fa-solid fa-trash"></i> Hapus
+                      </button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+            <% }); %>
+          <% } else { %>
+            <tr>
+              <td colspan="8" class="text-center py-4 text-muted">
+                <i class="fa-solid fa-folder-open fs-3 d-block mb-2"></i>
+                Belum ada data transaksi yang tersedia.
+              </td>
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</main>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('searchInput');
+    const clearSearch = document.getElementById('clearSearch');
+    const rows = document.querySelectorAll('#transaksiTable tbody tr');
+    const dataCounter = document.getElementById('dataCounter');
+
+    function filterTable() {
+      let filter = searchInput ? searchInput.value.toLowerCase() : '';
+      let visibleCount = 0;
+
+      rows.forEach(row => {
+        let namaMemberEl = row.querySelector('.nama-member');
+        if (namaMemberEl) {
+          let textValue = namaMemberEl.textContent || namaMemberEl.innerText;
+          if (textValue.toLowerCase().indexOf(filter) > -1) {
+            row.style.display = "";
+            visibleCount++;
+          } else {
+            row.style.display = "none";
+          }
+        }
+      });
+
+      if (clearSearch) {
+        clearSearch.style.display = filter.length > 0 ? "block" : "none";
+      }
+
+      if (dataCounter) {
+        dataCounter.textContent = `Menampilkan ${visibleCount} data transaksi`;
+      }
+    }
+
+    if (searchInput) searchInput.addEventListener('keyup', filterTable);
+
+    if (clearSearch) {
+      clearSearch.addEventListener('click', function() {
+        searchInput.value = '';
+        filterTable();
+        searchInput.focus();
+      });
+    }
+
+    filterTable();
+  });
+</script>
+
+<%- include('../partials/footer') %>

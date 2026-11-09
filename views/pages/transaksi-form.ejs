@@ -1,0 +1,108 @@
+<%- include('../partials/header') %>
+
+<!-- Font Awesome CDN untuk Ikon -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<main class="container container-home">
+  <!-- Toolbar Header Halaman -->
+  <div class="page-toolbar">
+    <div>
+      <h2 class="fw-bold text-white mb-1"><%= pageTitle %></h2>
+      <p class="text-muted small mb-0">Isi formulir di bawah ini untuk mencatat pembayaran transaksi gym.</p>
+    </div>
+    <div>
+      <a href="/transaksi" class="btn-hero-secondary">
+        <i class="fa-solid fa-arrow-left"></i> Kembali ke Daftar
+      </a>
+    </div>
+  </div>
+
+  <!-- Container Form Glassmorphism -->
+  <div class="glass-card form-glass-container">
+    <% if (typeof errors !== 'undefined' && errors && errors.length > 0) { %>
+      <div class="alert alert--err mb-4">
+        <strong class="d-block mb-1"><i class="fa-solid fa-triangle-exclamation me-1"></i> Terjadi kesalahan input:</strong>
+        <ul class="mb-0 ps-3">
+          <% errors.forEach(err => { %>
+            <li><%= err %></li>
+          <% }) %>
+        </ul>
+      </div>
+    <% } %>
+
+    <form action="<%= action %>" method="POST">
+      <div class="form-grid">
+        <!-- Pilih Member -->
+        <div class="form-group">
+          <label for="id_member">Pilih Member <span class="text-danger">*</span></label>
+          <select id="id_member" name="id_member" class="form-input" required>
+            <option value="" disabled <%= !transaksi.id_member ? 'selected' : '' %>>-- Pilih Member --</option>
+            <% if (typeof members !== 'undefined' && members) { %>
+              <% members.forEach(function(m) { %>
+                <option value="<%= m.id %>" <%= transaksi.id_member == m.id ? 'selected' : '' %>>
+                  <%= m.nama || m.nama_member || ('Member #' + m.id) %>
+                </option>
+              <% }); %>
+            <% } %>
+          </select>
+        </div>
+
+        <!-- Pilih Paket -->
+        <div class="form-group">
+          <label for="id_paket">Pilih Paket <span class="text-danger">*</span></label>
+          <select id="id_paket" name="id_paket" class="form-input" required>
+            <option value="" disabled <%= !transaksi.id_paket ? 'selected' : '' %>>-- Pilih Paket --</option>
+            <% if (typeof pakets !== 'undefined' && pakets) { %>
+              <% pakets.forEach(function(p) { %>
+                <option value="<%= p.id %>" <%= transaksi.id_paket == p.id ? 'selected' : '' %>>
+                  <%= p.nama_paket %> (Rp <%= Number(p.harga || 0).toLocaleString('id-ID') %>)
+                </option>
+              <% }); %>
+            <% } %>
+          </select>
+        </div>
+
+        <!-- Tanggal Transaksi -->
+        <div class="form-group">
+          <label for="tanggal_transaksi">Tanggal Transaksi <span class="text-danger">*</span></label>
+          <input type="date" id="tanggal_transaksi" name="tanggal_transaksi" class="form-input" value="<%= transaksi.tanggal_transaksi ? new Date(transaksi.tanggal_transaksi).toISOString().split('T')[0] : '' %>" required>
+        </div>
+
+        <!-- Metode Pembayaran -->
+        <div class="form-group">
+          <label for="metode_bayar">Metode Pembayaran <span class="text-danger">*</span></label>
+          <select id="metode_bayar" name="metode_bayar" class="form-input" required>
+            <option value="Tunai" <%= transaksi.metode_bayar === 'Tunai' ? 'selected' : '' %>>Tunai</option>
+            <option value="Transfer" <%= transaksi.metode_bayar === 'Transfer' ? 'selected' : '' %>>Transfer</option>
+            <option value="QRIS" <%= transaksi.metode_bayar === 'QRIS' ? 'selected' : '' %>>QRIS</option>
+          </select>
+        </div>
+
+        <!-- Status Bayar -->
+        <div class="form-group">
+          <label for="status_bayar">Status Bayar <span class="text-danger">*</span></label>
+          <select id="status_bayar" name="status_bayar" class="form-input" required>
+            <option value="Lunas" <%= transaksi.status_bayar === 'Lunas' ? 'selected' : '' %>>Lunas</option>
+            <option value="Belum Lunas" <%= transaksi.status_bayar === 'Belum Lunas' ? 'selected' : '' %>>Belum Lunas</option>
+          </select>
+        </div>
+
+        <!-- Total Bayar -->
+        <div class="form-group">
+          <label for="total_bayar">Total Bayar (Rp) <span class="text-danger">*</span></label>
+          <input type="number" id="total_bayar" name="total_bayar" class="form-input" placeholder="Contoh: 250000" value="<%= transaksi.total_bayar %>" required min="0">
+        </div>
+      </div>
+
+      <!-- Tombol Aksi Simpan & Batal -->
+      <div class="form-actions mt-4">
+        <button type="submit" class="btn-hero-primary">
+          <i class="fa-solid fa-floppy-disk me-1"></i> Simpan Data
+        </button>
+        <a href="/transaksi" class="btn-hero-secondary">Batal</a>
+      </div>
+    </form>
+  </div>
+</main>
+
+<%- include('../partials/footer') %>

@@ -28,14 +28,19 @@ const cek = (b) => {
 };
 
 // READ: Menampilkan semua member
-exports.index = async (req, res) => {
-  const members = await Member.getAll();
+exports.index = async (req, res, next) => {
+  try {
+    const members = await Member.getAll();
 
-  res.render('pages/member-list', {
-    pageTitle: 'Data Member',
-    members,
-    gagal: req.query.gagal === '1'
-  });
+    // Karena file ada di views/pages/member-list.ejs
+    res.render('pages/member-list', {
+      pageTitle: 'Data Member',
+      members: members || [],
+      gagal: req.query.gagal === '1'
+    });
+  } catch (err) {
+    next(err);
+  }
 };
 
 // CREATE: Menampilkan form tambah
@@ -58,58 +63,70 @@ exports.formTambah = (req, res) => {
 };
 
 // CREATE: Menyimpan member baru
-exports.simpan = async (req, res) => {
-  const body = req.body;
-  const errors = cek(body);
+exports.simpan = async (req, res, next) => {
+  try {
+    const body = req.body;
+    const errors = cek(body);
 
-  if (errors.length > 0) {
-    return res.status(400).render('pages/member-form', {
-      pageTitle: 'Tambah Member',
-      action: '/member/tambah',
-      member: body,
-      errors
-    });
+    if (errors.length > 0) {
+      return res.status(400).render('pages/member-form', {
+        pageTitle: 'Tambah Member',
+        action: '/member/tambah',
+        member: body,
+        errors
+      });
+    }
+
+    await Member.create(body);
+    res.redirect('/member');
+  } catch (err) {
+    next(err);
   }
-
-  await Member.create(body);
-  res.redirect('/member');
 };
 
 // UPDATE: Menampilkan data yang ingin diedit
 exports.formEdit = async (req, res, next) => {
-  const member = await Member.getById(req.params.id);
+  try {
+    const member = await Member.getById(req.params.id);
 
-  if (!member) return next();
+    if (!member) return next();
 
-  res.render('pages/member-form', {
-    pageTitle: 'Edit Member',
-    action: `/member/edit/${member.id}`,
-    member,
-    errors: []
-  });
+    res.render('pages/member-form', {
+      pageTitle: 'Edit Member',
+      action: `/member/edit/${member.id}`,
+      member,
+      errors: []
+    });
+  } catch (err) {
+    next(err);
+  }
 };
 
 // UPDATE: Menyimpan perubahan member
 exports.perbarui = async (req, res, next) => {
-  const id = req.params.id;
-  const body = req.body;
+  try {
+    const id = req.params.id;
+    const body = req.body;
 
-  const member = await Member.getById(id);
-  if (!member) return next();
+    const member = await Member.getById(id);
+    if (!member) return next();
 
-  const errors = cek(body);
+    const errors = cek(body);
 
-  if (errors.length > 0) {
-    return res.status(400).render('pages/member-form', {
-      pageTitle: 'Edit Member',
-      action: `/member/edit/${id}`,
-      member: body,
-      errors
-    });
+    if (errors.length > 0) {
+      return res.status(400).render('pages/member-form', {
+        pageTitle: 'Edit Member',
+        action: `/member/edit/${id}`,
+        member: body,
+        errors
+      });
+    }
+
+    await Member.update(id, body);
+    res.redirect('/member');
+  } catch (err) {
+    next(err);
   }
-
-  await Member.update(id, body);
-  res.redirect('/member');
 };
 
 // DELETE: Menghapus member
@@ -120,12 +137,10 @@ exports.hapus = async (req, res, next) => {
     if (!hasil) return next();
 
     res.redirect('/member');
-
   } catch (err) {
     if (err.code === 'ER_ROW_IS_REFERENCED_2') {
       return res.redirect('/member?gagal=1');
     }
-
-    throw err;
+    next(err);
   }
 };

@@ -1,117 +1,487 @@
+/* ==========================================================================
+   1. RESET & UTAMA (BASE & LAYOUT)
+   ========================================================================== */
 * { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; }
-body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; background: #f1f5f9; color: #0f172a; line-height: 1.5; overflow-x: hidden; }
+body { 
+  margin: 0; 
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif; 
+  background: #090d16 !important; 
+  color: #f1f5f9 !important; 
+  line-height: 1.5; 
+  overflow-x: hidden;
+  background-image: 
+    radial-gradient(circle at 15% 15%, rgba(14, 165, 233, 0.12) 0%, transparent 40%),
+    radial-gradient(circle at 85% 85%, rgba(139, 92, 246, 0.12) 0%, transparent 40%) !important;
+  background-attachment: fixed !important;
+}
 img { max-width: 100%; height: auto; }
 .container { max-width: 1100px; margin: 0 auto; padding: 0 1rem; }
 
-/* Navbar */
-.site-header { background: #0f172a; color: #fff; }
-.nav { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: .5rem 1.5rem; padding-top: .75rem; padding-bottom: .75rem; }
-.brand { color: #fff; font-weight: 700; text-decoration: none; font-size: 1.1rem; }
-.menu { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: .25rem; }
-.menu a { display: block; color: #cbd5e1; text-decoration: none; padding: .4rem .8rem; border-radius: 6px; }
+/* Margin Beranda & Halaman Modul */
+main.container-home {
+  margin-top: 2rem !important;
+  margin-bottom: 3rem !important;
+}
+
+/* ==========================================================================
+   2. NAVBAR & HEADER (GYM FORGE)
+   ========================================================================== */
+.site-header { 
+  background: #0f172a; 
+  color: #fff; 
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important; 
+  min-height: 70px !important;
+  padding-left: 20px !important;
+  padding-right: 20px !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  margin-bottom: 1.5rem !important;
+}
+
+.site-header .container.nav { 
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+}
+
+.brand { 
+  color: #fff; 
+  font-weight: 700; 
+  text-decoration: none !important; 
+  font-size: 1.1rem; 
+  display: flex !important;
+  align-items: center !important;
+  margin-right: auto !important;
+}
+
+.brand img {
+  height: 48px; 
+  width: auto;   
+  object-fit: contain;
+  animation: detakLogo 1.5s infinite ease-in-out;
+}
+
+.brand span { margin-left: 10px; font-size: 1.2rem; }
+
+@keyframes detakLogo {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.12); }
+  100% { transform: scale(1); }
+}
+
+.menu { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: .5rem; }
+.menu a { display: block; color: #cbd5e1; text-decoration: none; padding: .5rem 1rem; border-radius: 8px; font-weight: 500; }
 .menu a:hover { background: #1e293b; color: #fff; }
 .menu a.active { background: #0284c7; color: #fff; }
 
-/* Komponen umum */
-.card { background: #fff; padding: 1.25rem; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,.1); margin: 1.5rem 0; }
-.card h1, .card h2, .card h3 { margin-top: 0; }
-.center { text-align: center; }
-.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
-.grid .card { margin: 0; }
-a.modul { text-decoration: none; color: inherit; transition: box-shadow .15s; }
-a.modul:hover { box-shadow: 0 4px 12px rgba(2,132,199,.25); }
-small { color: #64748b; }
-.btn { display: inline-block; padding: .55rem 1.1rem; background: #0284c7; color: #fff; border: 0; border-radius: 4px; text-decoration: none; cursor: pointer; font-size: .95rem; }
-.toolbar { display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; margin-bottom: 1rem; }
-.toolbar h2 { margin: 0; }
+/* ==========================================================================
+   3. HERO BANNER BERANDA & TOMBOL AKSES
+   ========================================================================== */
+.hero-banner {
+  background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.95) 100%);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
+  position: relative;
+  overflow: hidden;
+  border-radius: 20px;
+  padding: 3rem 2.5rem;
+  margin-bottom: 2rem;
+}
 
-/* Tabel (bebas overflow horizontal pada halaman) */
-.table-wrap { overflow-x: auto; }
-table { width: 100%; border-collapse: collapse; font-size: .92rem; }
-th, td { border: 1px solid #e2e8f0; padding: .65rem .8rem; text-align: left; vertical-align: top; }
-th { background: #f1f5f9; }
-tbody tr:nth-child(even) { background: #f8fafc; }
-tbody tr:hover { background: #e0f2fe; }
-.num { text-align: right; white-space: nowrap; }
-.aksi { white-space: nowrap; }
-.aksi a { color: #0284c7; margin-right: .5rem; }
-.aksi form { display: inline; }
-.link-danger { color: #ef4444; background: none; border: 0; cursor: pointer; text-decoration: underline; font-size: inherit; padding: 0; }
+.hero-banner::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, #06b6d4, #3b82f6, #8b5cf6);
+}
 
-/* Alert dan badge */
-.alert { padding: .7rem 1rem; border-radius: 6px; margin-bottom: 1rem; }
-.alert ul { margin: 0; padding-left: 1.2rem; }
-.alert--ok { background: #dcfce7; color: #166534; }
-.alert--warn { background: #fef9c3; color: #854d0e; }
-.alert--err { background: #fee2e2; color: #991b1b; }
-.badge { padding: .15rem .55rem; border-radius: 999px; font-size: .8rem; background: #e2e8f0; }
+.hero-banner h1 { color: #ffffff; font-size: 2.3rem; font-weight: 800; margin-top: 0; margin-bottom: 0.85rem; }
+.hero-banner p { color: #94a3b8; font-size: 1.05rem; line-height: 1.6; max-width: 650px; margin-bottom: 1.75rem; }
 
-/* Formulir */
-.form-card { max-width: 640px; margin-left: auto; margin-right: auto; }
-form label { display: block; margin: .8rem 0 .25rem; font-weight: 600; }
-form input, form select, form textarea { width: 100%; padding: .5rem; border: 1px solid #cbd5e1; border-radius: 4px; font: inherit; }
-.row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-.actions { margin-top: 1.2rem; display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
-.cancel { color: #64748b; }
+/* Tombol Hero */
+.hero-action-group {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
 
-.site-footer { text-align: center; color: #64748b; padding: 2rem 0; font-size: .85rem; }
+.btn-hero-primary {
+  background: linear-gradient(135deg, #06b6d4 0%, #0284c7 100%) !important;
+  border: none !important;
+  color: #ffffff !important;
+  font-weight: 600 !important;
+  padding: 0.75rem 1.6rem !important;
+  border-radius: 10px !important;
+  text-decoration: none !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+  box-shadow: 0 4px 15px rgba(6, 182, 212, 0.35) !important;
+  transition: all 0.25s ease !important;
+  font-size: 0.95rem !important;
+}
+
+.btn-hero-primary:hover {
+  transform: translateY(-3px) !important;
+  box-shadow: 0 8px 22px rgba(6, 182, 212, 0.5) !important;
+  color: #ffffff !important;
+}
+
+.btn-hero-secondary {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  color: #f8fafc !important;
+  font-weight: 500 !important;
+  padding: 0.75rem 1.6rem !important;
+  border-radius: 10px !important;
+  text-decoration: none !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+  backdrop-filter: blur(6px) !important;
+  transition: all 0.25s ease !important;
+  font-size: 0.95rem !important;
+}
+
+.btn-hero-secondary:hover {
+  background: rgba(255, 255, 255, 0.12) !important;
+  border-color: rgba(255, 255, 255, 0.3) !important;
+  transform: translateY(-3px) !important;
+  color: #ffffff !important;
+}
+
+/* ==========================================================================
+   4. LAYOUT GRID RESPONSIF
+   ========================================================================== */
+.home-grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+  margin-bottom: 2.5rem;
+}
+
+@media (max-width: 992px) {
+  .home-grid-4 { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 576px) {
+  .home-grid-4 { grid-template-columns: 1fr; }
+}
+
+/* ==========================================================================
+   5. GLASSMORPHISM CARDS (STATISTIK & AKSES CEPAT)
+   ========================================================================== */
+.glass-card {
+  background: rgba(30, 41, 59, 0.5) !important;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 16px !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.stat-card { 
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(255, 255, 255, 0.2) !important;
+  box-shadow: 0 12px 25px -5px rgba(0, 0, 0, 0.4);
+}
+
+.stat-title { color: #94a3b8; font-size: 0.875rem; display: block; margin-bottom: 0.25rem; font-weight: 500; }
+.stat-value { font-size: 2rem; font-weight: 800; color: #ffffff; margin: 0; line-height: 1; }
+
+.icon-glow {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  flex-shrink: 0;
+}
+
+.glow-cyan { background: rgba(6, 182, 212, 0.15); color: #22d3ee; }
+.glow-emerald { background: rgba(16, 185, 129, 0.15); color: #34d399; }
+.glow-amber { background: rgba(245, 158, 11, 0.15); color: #fbbf24; }
+.glow-purple { background: rgba(139, 92, 246, 0.15); color: #a78bfa; }
+
+.feature-card {
+  text-decoration: none !important;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.75rem 1.25rem;
+  text-align: center;
+  min-height: 190px;
+}
+
+.feature-card:hover { transform: translateY(-6px) scale(1.02); }
+.feature-card:hover .icon-glow { transform: scale(1.1) rotate(-4deg); }
+
+.feature-card h6 { 
+  color: #ffffff; 
+  font-size: 1.1rem; 
+  font-weight: 700; 
+  margin-top: 1rem; 
+  margin-bottom: 0.4rem; 
+}
+
+.feature-card p { 
+  color: #94a3b8; 
+  font-size: 0.85rem; 
+  margin: 0; 
+  line-height: 1.4; 
+}
+
+.feature-card:hover.card-cyan { border-color: rgba(6, 182, 212, 0.5) !important; box-shadow: 0 12px 25px -5px rgba(6, 182, 212, 0.25); }
+.feature-card:hover.card-emerald { border-color: rgba(16, 185, 129, 0.5) !important; box-shadow: 0 12px 25px -5px rgba(16, 185, 129, 0.25); }
+.feature-card:hover.card-amber { border-color: rgba(245, 158, 11, 0.5) !important; box-shadow: 0 12px 25px -5px rgba(245, 158, 11, 0.25); }
+.feature-card:hover.card-purple { border-color: rgba(139, 92, 246, 0.5) !important; box-shadow: 0 12px 25px -5px rgba(139, 92, 246, 0.25); }
+
+.text-gradient-brand {
+  background: linear-gradient(90deg, #22d3ee, #8b5cf6);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ==========================================================================
+   6. TOOLBAR HALAMAN & SPACING DARI TABEL
+   ========================================================================== */
+.page-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  margin-bottom: 2rem !important;
+}
+
+/* ==========================================================================
+   7. STYLING TABEL TEMA DARK GLASSMORPHISM & TOMBOL AKSI
+   ========================================================================== */
+.table-wrap {
+  overflow-x: auto;
+}
+
+.table-custom {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.93rem;
+  color: #f1f5f9;
+}
+
+.table-custom th {
+  background: rgba(15, 23, 42, 0.7) !important;
+  color: #38bdf8 !important;
+  font-weight: 600;
+  padding: 0.85rem 1rem;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  letter-spacing: 0.5px;
+}
+
+.table-custom td {
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  vertical-align: middle;
+}
+
+.table-custom tbody tr {
+  transition: background-color 0.2s ease;
+}
+
+.table-custom tbody tr:hover {
+  background-color: rgba(255, 255, 255, 0.04) !important;
+}
+
+.badge-status {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.badge-status--active {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.badge-status--inactive {
+  background: rgba(239, 68, 68, 0.15);
+  color: #fca5a5;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.btn-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-decoration: none !important;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  border: none;
+}
+
+.btn-action--edit {
+  background: rgba(6, 182, 212, 0.15);
+  color: #22d3ee;
+  border: 1px solid rgba(6, 182, 212, 0.3);
+}
+
+.btn-action--edit:hover {
+  background: #06b6d4;
+  color: #ffffff;
+  transform: translateY(-2px);
+}
+
+.btn-action--delete {
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.btn-action--delete:hover {
+  background: #ef4444;
+  color: #ffffff;
+  transform: translateY(-2px);
+}
+
+.alert {
+  padding: 0.8rem 1.2rem;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+
+.alert--err {
+  background: rgba(239, 68, 68, 0.15);
+  color: #fca5a5;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+/* ==========================================================================
+   8. STYLING FORMULIR TEMA DARK GLASSMORPHISM
+   ========================================================================== */
+.form-glass-container {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 2.25rem;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem 1.5rem;
+}
 
 @media (max-width: 640px) {
-  .row { grid-template-columns: 1fr; }
-  .nav { flex-direction: column; align-items: flex-start; }
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
-.brand img {
-    height: 50px; 
-    width: auto;   
-    object-fit: contain;
+.form-group {
+  display: flex;
+  flex-direction: column;
 }
 
-.brand span {
-    margin-left: 8px; 
+.form-group label {
+  color: #f8fafc;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
 }
 
-.site-header {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: flex-start !important; 
-    min-height: 70px !important;
-    padding-left: 20px !important;
-    padding-right: 20px !important;
+.form-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: rgba(15, 23, 42, 0.7) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 10px !important;
+  color: #ffffff !important;
+  font-size: 0.95rem;
+  outline: none;
+  transition: all 0.25s ease;
 }
 
-.site-header .container.nav {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: space-between !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    margin: 0 !important;
+.form-input:focus {
+  border-color: #06b6d4 !important;
+  box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.2) !important;
+  background: rgba(15, 23, 42, 0.9) !important;
 }
 
-.brand {
-    display: flex !important;
-    align-items: center !important;
-    text-decoration: none !important;
-    margin-right: auto !important;
+.form-input option {
+  background: #0f172a;
+  color: #ffffff;
 }
 
-@keyframes detakLogo {
-    0% {
-        transform: scale(1);
-    }
-    50% {
-        transform: scale(1.15); 
-    }
-    100% {
-        transform: scale(1);
-    }
+/* Tanpa Garis Bawah di Area Tombol Simpan & Batal */
+.form-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding-top: 1.5rem;
+  border-top: none !important;
 }
 
-.brand img {
-    height: 50px; 
-    width: auto;
-    object-fit: contain;
-    animation: detakLogo 1.5s infinite ease-in-out;
+/* ==========================================================================
+   9. FOOTER MODERN & PREMIUM (GYM FORGE)
+   ========================================================================== */
+.site-footer {
+  background: #090d16;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  color: #64748b;
+  padding: 2rem 0;
+  margin-top: 4rem;
+  font-size: 0.9rem;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.footer-brand {
+  color: #f8fafc;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.footer-brand span {
+  color: #38bdf8;
+}
+
+.footer-meta {
+  color: #94a3b8;
+  font-size: 0.85rem;
 }
