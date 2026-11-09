@@ -61,3 +61,57 @@ form input, form select, form textarea { width: 100%; padding: .5rem; border: 1p
   .row { grid-template-columns: 1fr; }
   .nav { flex-direction: column; align-items: flex-start; }
 }
+
+.brand img {
+    height: 50px; 
+    width: auto;   
+    object-fit: contain;
+}
+
+.brand span {
+    margin-left: 8px; 
+}
+
+.site-header {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-start !important; 
+    min-height: 70px !important;
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+}
+
+.site-header .container.nav {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+}
+
+.brand {
+    display: flex !important;
+    align-items: center !important;
+    text-decoration: none !important;
+    margin-right: auto !important;
+}
+
+@keyframes detakLogo {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.15); 
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.brand img {
+    height: 50px; 
+    width: auto;
+    object-fit: contain;
+    animation: detakLogo 1.5s infinite ease-in-out;
+}

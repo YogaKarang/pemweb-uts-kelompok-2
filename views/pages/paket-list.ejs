@@ -1,0 +1,53 @@
+<%- include('../partials/header', { pageTitle: pageTitle }) %>
+
+<div class="card">
+  <div class="toolbar">
+    <h2>Paket Membership</h2>
+    <a class="btn" href="/paket/tambah">+ Tambah Paket</a>
+  </div>
+
+  <% if (pesanError) { %>
+    <div class="alert alert--warn"><%= pesanError %></div>
+  <% } %>
+
+  <% if (pakets.length === 0) { %>
+    <p>Belum ada paket membership. Klik "Tambah Paket" untuk membuat yang pertama.</p>
+  <% } else { %>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>No</th>
+            <th>Nama Paket</th>
+            <th>Durasi</th>
+            <th class="num">Harga</th>
+            <th>Deskripsi</th>
+            <th>Status</th>
+            <th>Aksi</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% pakets.forEach((p, i) => { %>
+            <tr>
+              <td><%= i + 1 %></td>
+              <td><%= p.nama_paket %></td>
+              <td><%= p.durasi_hari %> hari</td>
+              <td class="num"><%= formatRupiah(p.harga) %></td>
+              <td><%= p.deskripsi || '-' %></td>
+              <td><span class="badge"><%= p.status %></span></td>
+              <td class="aksi">
+                <a href="/paket/edit/<%= p.id %>">Edit</a>
+                <form action="/paket/hapus/<%= p.id %>" method="POST"
+                      onsubmit="return confirm('Yakin ingin menghapus paket ini?')">
+                  <button type="submit" class="link-danger">Hapus</button>
+                </form>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  <% } %>
+</div>
+
+<%- include('../partials/footer') %>

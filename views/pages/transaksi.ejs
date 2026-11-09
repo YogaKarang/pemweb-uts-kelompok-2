@@ -1,3 +1,4 @@
+<%- include('../partials/header', { pageTitle: pageTitle }) %>
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -50,7 +51,6 @@
 </head>
 <body>
     <div class="container py-5">
-        
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
                 <h2 class="fw-bold text-dark mb-1">Daftar Transaksi Gym</h2>
@@ -66,8 +66,15 @@
                 <h4 class="fw-bold mb-3">Form Tambah Transaksi Baru</h4>
                 <form action="/transaksi/store" method="POST" class="row g-3">
                     <div class="col-md-6">
-                        <label class="form-label fw-semibold">Nama Member</label>
-                        <input type="text" name="nama_member" class="form-control" placeholder="Ketik nama member..." required>
+                        <label class="form-label fw-semibold">Pilih Member</label>
+                        <select name="id_member" class="form-select" required>
+                            <option value="">-- Pilih Member --</option>
+                            <% if (typeof members !== 'undefined' && members.length > 0) { %>
+                                <% members.forEach(function(member) { %>
+                                    <option value="<%= member.id %>"><%= member.nama_member || member.nama %></option>
+                                <% }); %>
+                            <% } %>
+                        </select>
                     </div>
 
                     <div class="col-md-6">
@@ -144,14 +151,14 @@
                     <table class="table table-hover align-middle mb-0" id="transaksiTable">
                         <thead class="table-light">
                             <tr>
-                                <th class="ps-4">No</th>
-                                <th>Nama Member</th>
-                                <th>Jenis Paket</th>
-                                <th>Tanggal</th>
-                                <th>Metode Bayar</th>
-                                <th>Total (Rp)</th>
-                                <th>Status</th>
-                                <th class="text-end pe-4">Aksi</th>
+                                <th class="text-center ps-4" style="width: 50px;">No</th>
+                                <th class="text-center">Nama Member</th>
+                                <th class="text-center">Jenis Paket</th>
+                                <th class="text-center">Tanggal</th>
+                                <th class="text-center">Metode Bayar</th>
+                                <th class="text-center">Total (Rp)</th>
+                                <th class="text-center">Status</th>
+                                <th class="text-center pe-4">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -159,18 +166,29 @@
                                 <% transaksis.forEach(function(trx, index) { %>
                                     <tr>
                                         <td class="ps-4 fw-semibold"><%= index + 1 %></td>
-                                        <td class="nama-member"><span class="fw-medium text-dark"><%= trx.nama_member %></span></td>
-                                        <!-- Langsung membaca nama paket dari database/join secara dinamis -->
+                                        <td class="nama-member">
+                                            <span class="fw-medium text-dark">
+                                                <% 
+                                                    let matchedMember = members.find(m => m.id == trx.id_member);
+                                                    let namaMemberAsli = matchedMember ? (matchedMember.nama_member || matchedMember.nama) : (trx.nama_member || ('Member #' + trx.id_member));
+                                                %>
+                                                <%= namaMemberAsli %>
+                                            </span>
+                                        </td>
                                         <td>
                                             <span class="badge bg-primary-subtle text-primary px-2 py-1">
-                                                <%= trx.nama_paket || 'Paket #' + trx.id_paket %>
+                                                <% 
+                                                    let matchedPaket = pakets && pakets.find(p => p.id == trx.id_paket);
+                                                    let namaPaketAsli = matchedPaket ? matchedPaket.nama_paket : (trx.nama_paket || ('Paket #' + trx.id_paket));
+                                                %>
+                                                <%= namaPaketAsli %>
                                             </span>
                                         </td>
                                         <td class="text-muted"><%= trx.tanggal_transaksi %></td>
                                         <td><span class="fw-medium"><%= trx.metode_bayar %></span></td>
                                         <td class="fw-semibold text-success">Rp <%= Number(trx.total_bayar).toLocaleString('id-ID') %></td>
                                         <td>
-                                            <% if (trx.status_bayar.toLowerCase() === 'lunas') { %>
+                                            <% if (trx.status_bayar && trx.status_bayar.toLowerCase() === 'lunas') { %>
                                                 <span class="badge bg-success bg-opacity-10 text-success px-3 py-2 rounded-pill">Lunas</span>
                                             <% } else { %>
                                                 <span class="badge bg-warning bg-opacity-10 text-warning px-3 py-2 rounded-pill">Belum Lunas</span>
@@ -200,8 +218,17 @@
                                                     <div class="modal-body text-start">
                                                         <div class="row g-3">
                                                             <div class="col-md-6">
-                                                                <label class="form-label fw-semibold">Nama Member</label>
-                                                                <input type="text" name="nama_member" class="form-control" value="<%= trx.nama_member %>" required>
+                                                                <label class="form-label fw-semibold">Pilih Member</label>
+                                                                <select name="id_member" class="form-select" required>
+                                                                    <option value="">-- Pilih Member --</option>
+                                                                    <% if (typeof members !== 'undefined') { %>
+                                                                        <% members.forEach(function(member) { %>
+                                                                            <option value="<%= member.id %>" <%= trx.id_member === member.id ? 'selected' : '' %>>
+                                                                                <%= member.nama_member || member.nama %>
+                                                                            </option>
+                                                                        <% }); %>
+                                                                    <% } %>
+                                                                </select>
                                                             </div>
 
                                                             <div class="col-md-6">
@@ -315,3 +342,4 @@
     </script>
 </body>
 </html>
+<%- include('../partials/footer') %>

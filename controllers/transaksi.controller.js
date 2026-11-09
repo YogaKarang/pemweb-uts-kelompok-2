@@ -1,11 +1,12 @@
 const TransaksiModel = require('../models/transaksi.model');
 const MemberModel = require('../models/member.model');
+const PaketModel = require('../models/paket.model');
 
 exports.index = async (req, res) => {
     try {
         const transaksis = await TransaksiModel.getAll();
         const members = await MemberModel.getAll();
-        const pakets = []; 
+        const pakets = await PaketModel.getAll();
 
         res.render('pages/transaksi', { 
             transaksis, 
@@ -53,7 +54,7 @@ exports.getByQris = async (req, res) => {
     try {
         const transaksis = await TransaksiModel.getByMetodeBayar('QRIS');
         const members = await MemberModel.getAll();
-        const pakets = [];
+        const pakets = await PaketModel.getAll();
 
         res.render('pages/transaksi', { 
             transaksis, 
