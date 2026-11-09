@@ -1,0 +1,75 @@
+<%- include('../../partials/header') %>
+
+<%
+  const isEdit = mode === 'edit';
+  const action = isEdit ? `/booking/${booking.id}/update` : '/booking';
+%>
+
+<main class="container">
+  <h1><%= isEdit ? 'Edit Booking Latihan' : 'Tambah Booking Latihan' %></h1>
+
+  <% if (errors.length) { %>
+    <div class="alert alert-danger">
+      <ul>
+        <% errors.forEach((e) => { %><li><%= e %></li><% }) %>
+      </ul>
+    </div>
+  <% } %>
+
+  <form action="<%= action %>" method="POST" class="form">
+    <div class="form-group">
+      <label for="id_member">Member</label>
+      <select id="id_member" name="id_member" required>
+        <option value="">-- Pilih member --</option>
+        <% members.forEach((m) => { %>
+          <option value="<%= m.id %>" <%= String(booking.id_member) === String(m.id) ? 'selected' : '' %>>
+            <%= m.nama %>
+          </option>
+        <% }) %>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="jenis_latihan">Jenis Latihan</label>
+      <select id="jenis_latihan" name="jenis_latihan" required>
+        <option value="">-- Pilih jenis latihan --</option>
+        <% jenisLatihan.forEach((j) => { %>
+          <option value="<%= j %>" <%= booking.jenis_latihan === j ? 'selected' : '' %>><%= j %></option>
+        <% }) %>
+      </select>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="tanggal_booking">Tanggal Booking</label>
+        <input type="date" id="tanggal_booking" name="tanggal_booking"
+               value="<%= booking.tanggal_booking %>" required>
+      </div>
+      <div class="form-group">
+        <label for="jam_mulai">Jam Mulai</label>
+        <input type="time" id="jam_mulai" name="jam_mulai" value="<%= booking.jam_mulai %>" required>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="status">Status</label>
+      <select id="status" name="status" required>
+        <% statusBooking.forEach((s) => { %>
+          <option value="<%= s %>" <%= booking.status === s ? 'selected' : '' %>><%= s %></option>
+        <% }) %>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="catatan">Catatan (opsional)</label>
+      <textarea id="catatan" name="catatan" rows="3" maxlength="500"><%= booking.catatan || '' %></textarea>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary"><%= isEdit ? 'Simpan Perubahan' : 'Simpan' %></button>
+      <a href="/booking" class="btn">Batal</a>
+    </div>
+  </form>
+</main>
+
+<%- include('../../partials/footer') %>

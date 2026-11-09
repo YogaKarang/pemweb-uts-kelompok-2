@@ -1,10 +1,13 @@
 const express = require('express');
+const BookingController = require('../controllers/booking.controller');
+
 const router = express.Router();
 
-// TODO (Dede): ganti rute sementara di bawah ini dengan rute CRUD modul Booking Latihan
-// (pola: lihat bagian "Cara Mengerjakan Modul" di README.md).
-router.get('/booking', (req, res) => {
-  res.render('pages/placeholder', { pageTitle: 'Booking Latihan', modul: 'Booking Latihan', pemegang: 'Dede' });
-});
+router.get('/', BookingController.index);
+router.get('/create', BookingController.createForm);
+router.post('/', BookingController.store);
+router.get('/:id/edit', BookingController.editForm);
+router.post('/:id/update', BookingController.update);
+router.post('/:id/delete', BookingController.destroy);
 
 module.exports = router;
